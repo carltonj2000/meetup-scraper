@@ -2,6 +2,7 @@
   "name": "meetup-scraper",
   "version": "1.0.0",
   "description": "Meetup Scraper",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev:client": "cd nextjs-meetup-scraper; npm run dev",
@@ -9,12 +10,15 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "db:gen": "cd hono-meetup-server; npx drizzle-kit generate:sqlite",
     "db:push": "cd hono-meetup-server; npx drizzle-kit push:sqlite",
-    "db:studio": "cd hono-meetup-server; npx drizzle-kit studio"
+    "db:studio": "cd hono-meetup-server; npx drizzle-kit studio",
+    "db:backup": "tsx scripts/db-backup.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@types/node": "^20.12.3",
+    "concurrently": "^8.2.2",
+    "tsx": "^4.7.1"
   }
 }
