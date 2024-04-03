@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "dev:old": "tsx watch src/index.ts",
+    "dev": "nodemon --exec \"tsx watch src/index.ts\" ./src/* "
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.9.0",
+    "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.4",
+    "hono": "^4.1.4",
+    "jsdom": "^24.0.0",
+    "puppeteer": "^22.6.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.6",
+    "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.20.14",
+    "nodemon": "^3.1.0",
+    "tsx": "^3.12.2"
+  }
+}
