@@ -42,10 +42,7 @@ export const login = async (c: any) => {
   await passwordElem?.type(password);
   await passwordElem?.dispose();
   const loginBtnElem = await page.waitForSelector("button ::-p-text(Log in)");
-  const [response] = await Promise.all([
-    page.waitForNavigation(),
-    loginBtnElem?.click(),
-  ]);
+  await Promise.all([page.waitForNavigation(), loginBtnElem?.click()]);
   await loginBtnElem?.dispose();
   await page.waitForSelector("h2 ::-p-text(Events from your groups)");
   return c.json({ message: "logged in" });

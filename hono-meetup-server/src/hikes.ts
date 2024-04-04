@@ -4,13 +4,10 @@ export const hikes = async (c: any) => {
   console.log("member hikes");
   if (!browser || !page) return c.json({ error: "browser or page not open" });
   const body = await c.req.json();
-  console.log({ body });
   await page.goto(body.urlHns);
-  page.setDefaultTimeout(10000);
+  page.setDefaultTimeout(5000);
   try {
-    await page.waitForSelector("h3 ::-p-text(Attendance History)", {
-      timeout: 3000,
-    });
+    await page.waitForSelector("h3 ::-p-text(Attendance history)");
   } catch (e) {
     return c.json({ message: "member hikes", body, hikes: [], totalHikes: 0 });
   }

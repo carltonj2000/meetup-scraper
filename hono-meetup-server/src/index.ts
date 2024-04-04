@@ -42,7 +42,7 @@ app.get("/members", async (c) => await members(c));
 app.get("/member/:id", async (c) => await member(c));
 app.post("/hikes", async (c) => await hikes(c));
 app.get("/scroll", async (c) => await scroll(c));
-app.get("/toHere", async (c) => toHere(c));
+app.get("/toHere", async (c) => await toHere(c));
 
 const port = 3333;
 console.log(`Server is running on port ${port}`);
