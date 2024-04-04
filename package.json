@@ -8,7 +8,7 @@
     "dev:client": "cd nextjs-meetup-scraper; npm run dev",
     "dev:server": "cd hono-meetup-server; npm run dev",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "db:gen": "cd hono-meetup-server; npx drizzle-kit generate:sqlite",
+    "db:generate": "cd hono-meetup-server; npx drizzle-kit generate:sqlite",
     "db:push": "cd hono-meetup-server; npx drizzle-kit push:sqlite",
     "db:studio": "cd hono-meetup-server; npx drizzle-kit studio",
     "db:backup": "tsx scripts/db-backup.ts"

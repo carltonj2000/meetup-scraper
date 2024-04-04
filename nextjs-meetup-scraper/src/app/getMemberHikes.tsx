@@ -1,28 +1,29 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { getPath } from "./util";
+import { getPath, postPath } from "./util";
 import { useState } from "react";
 
-export default function GetMembersLink() {
+export default function GetMembersHikes() {
   const [members, membersSet] = useState([]);
   const gp = async () => {
     const j = await getPath("db/members");
     const ms = j.members;
     console.log({ ms });
     membersSet(ms);
-    let stopAt = 200;
-    for (let i = 0; i < ms.length; i++) {
+    let stopAt = 1;
+    for (let i = 2; i < ms.length; i++) {
       const m = ms[i];
-      if (stopAt < 0) break;
-      if (m.urlHns) continue;
-      const mr = await getPath(`member/${m.id}`);
+      if (stopAt <= 0) break;
+      const mh = await postPath("hikes", m);
       stopAt--;
-      console.log({ mr });
+      console.log({ mh });
     }
   };
   return (
     <>
-      <Button onClick={() => gp()}>Get Member Links</Button>
+      <Button onClick={() => gp()} variant="outline">
+        Get Member Hikes
+      </Button>
       {members && members.length > 0 && (
         <div>
           <p>Saw {members.length} member</p>

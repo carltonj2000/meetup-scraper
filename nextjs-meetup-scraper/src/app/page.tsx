@@ -1,5 +1,6 @@
 "use client";
 import Browser from "./browser";
+import GetMembersHikes from "./getMemberHikes";
 import GetMembersLink from "./getMemberLinks";
 
 function Home() {
@@ -8,8 +9,9 @@ function Home() {
       <Browser action="openBrowser" description="Open Meetup" />
       <Browser action="login" description="Login" />
       {/* <Browser action="haslv" description="Select Group" /> */}
-      <Browser action="member/11614620" description="Select Member" />
       <Browser action="toHere" description="To Here" variant="outline" />
+      <GetMembersHikes />
+      <Browser action="member/11614620" description="Select Member" />
       <GetMembersLink />
       <Browser action="db/members" description="Show Members" showJson={true} />
       <Browser action="scroll" description="Scroll To End" />

@@ -11,3 +11,15 @@ export const users = sqliteTable("users", {
 
 export type NewUserT = typeof users.$inferInsert;
 export type UserT = typeof users.$inferSelect;
+
+export const userHikes = sqliteTable("user_hikes", {
+  id: text("id").primaryKey().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
+});
+
+export type NewUserHikeT = typeof userHikes.$inferInsert;
+export type UserHikeT = typeof userHikes.$inferSelect;
