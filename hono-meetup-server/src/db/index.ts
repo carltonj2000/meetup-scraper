@@ -1,11 +1,12 @@
 import { Hono } from "hono";
-import { CSVToArray } from "./util";
+import { CSVToArray } from "../util";
 import "dotenv/config";
 import fs from "fs/promises";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { users } from "../db/schema";
+import { users } from "../../db/schema";
 import { eq, sql } from "drizzle-orm";
+import { restore } from "./restore";
 
 const dbFile = process.env.DB;
 const dbErr = " Server starting without a DB connection!";
@@ -14,7 +15,7 @@ if (!dbFile) {
   process.exit(-1);
 }
 const sqlite = new Database(dbFile);
-const db = drizzle(sqlite);
+export const db = drizzle(sqlite);
 if (!db) {
   console.error("DB connection failed." + dbErr);
   process.exit(-1);
@@ -42,7 +43,11 @@ dbRoute.get("/members", async (c: any) => {
 
 dbRoute.post("/hikes", async (c: any) => {
   const data = await c.req.json();
-  console.log({ data });
+  return c.json({ message: "hikes saved" });
+});
+
+dbRoute.get("/restore", async (c: any) => {
+  await restore(c);
   return c.json({ message: "hikes saved" });
 });
 

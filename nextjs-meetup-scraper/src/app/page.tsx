@@ -1,9 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import Browser from "./browser";
 import GetMembersHikes from "./getMemberHikes";
 import GetMembersLink from "./getMemberLinks";
-import { restartNodemon } from "./actions";
 
 function Home() {
   return (
@@ -14,11 +12,6 @@ function Home() {
       <GetMembersHikes />
       <div className="flex gap-1">
         <Browser action="toHere" description="To Here" variant="outline" />
-        <form action={restartNodemon}>
-          <Button variant="destructive" type="submit">
-            Restart NodeMon
-          </Button>
-        </form>
       </div>
       <Browser action="member/11614620" description="Select Member" />
       <GetMembersLink />
