@@ -8,22 +8,20 @@ export default function GetMembersHikes() {
   const gp = async () => {
     const j = await getPath("db/members");
     const ms = j.members;
-    console.log({ ms });
     membersSet(ms);
     let stopAt = 1;
     for (let i = 2; i < ms.length; i++) {
-      const m = ms[i];
+      const member = ms[i];
       if (stopAt <= 0) break;
-      const mh = await postPath("hikes", m);
+      const hikesRes = await postPath("hikes", member);
+      const hikes = hikesRes.hikes;
+      await postPath("db/hikes", { member, hikes });
       stopAt--;
-      console.log({ mh });
     }
   };
   return (
     <>
-      <Button onClick={() => gp()} variant="outline">
-        Get Member Hikes
-      </Button>
+      <Button onClick={() => gp()}>Get Member Hikes</Button>
       {members && members.length > 0 && (
         <div>
           <p>Saw {members.length} member</p>

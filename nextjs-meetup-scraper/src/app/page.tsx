@@ -1,7 +1,9 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import Browser from "./browser";
 import GetMembersHikes from "./getMemberHikes";
 import GetMembersLink from "./getMemberLinks";
+import { restartNodemon } from "./actions";
 
 function Home() {
   return (
@@ -9,8 +11,15 @@ function Home() {
       <Browser action="openBrowser" description="Open Meetup" />
       <Browser action="login" description="Login" />
       {/* <Browser action="haslv" description="Select Group" /> */}
-      <Browser action="toHere" description="To Here" variant="outline" />
       <GetMembersHikes />
+      <div className="flex gap-1">
+        <Browser action="toHere" description="To Here" variant="outline" />
+        <form action={restartNodemon}>
+          <Button variant="destructive" type="submit">
+            Restart NodeMon
+          </Button>
+        </form>
+      </div>
       <Browser action="member/11614620" description="Select Member" />
       <GetMembersLink />
       <Browser action="db/members" description="Show Members" showJson={true} />

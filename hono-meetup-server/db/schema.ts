@@ -17,9 +17,29 @@ export const userHikes = sqliteTable("user_hikes", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id),
-  name: text("name").notNull(),
-  url: text("url").notNull(),
+  hikeId: text("hike_id")
+    .notNull()
+    .references(() => hikes.id),
+  attended: text("attended"),
 });
 
 export type NewUserHikeT = typeof userHikes.$inferInsert;
 export type UserHikeT = typeof userHikes.$inferSelect;
+
+export const hikes = sqliteTable("hikes", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  baseHikeId: text("base_hike_id").references(() => baseHikes.id),
+  date: integer("date", { mode: "timestamp" }),
+});
+
+export type NewHikeT = typeof hikes.$inferInsert;
+export type HikeT = typeof hikes.$inferSelect;
+
+export const baseHikes = sqliteTable("base_hikes", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+});
+
+export type NewBaseHikeT = typeof baseHikes.$inferInsert;
+export type BaseHikeT = typeof baseHikes.$inferSelect;

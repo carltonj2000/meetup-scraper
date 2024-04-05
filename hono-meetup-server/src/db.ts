@@ -40,6 +40,12 @@ dbRoute.get("/members", async (c: any) => {
   return c.json({ members });
 });
 
+dbRoute.post("/hikes", async (c: any) => {
+  const data = await c.req.json();
+  console.log({ data });
+  return c.json({ message: "hikes saved" });
+});
+
 export const updateMemberLink = async (id: string, urlHns: string) => {
   await db.update(users).set({ urlHns }).where(eq(users.id, id)).run();
 };

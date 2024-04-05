@@ -24,7 +24,6 @@ export const postPath = async (p: any, b: any, toastOn = true) => {
     body: JSON.stringify(b),
   });
   const json = await res.json();
-  console.log({ json });
   if (json.error) {
     if (toastOn)
       toast({
