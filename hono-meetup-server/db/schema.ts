@@ -1,6 +1,6 @@
 import { text, sqliteTable, integer } from "drizzle-orm/sqlite-core";
 
-export const users = sqliteTable("users", {
+export const usersT = sqliteTable("users", {
   id: text("id").primaryKey().notNull(),
   hnsId: text("hns_id"),
   name: text("name").notNull(),
@@ -10,46 +10,46 @@ export const users = sqliteTable("users", {
   updated: integer("updated", { mode: "timestamp" }),
 });
 
-export type NewUserT = typeof users.$inferInsert;
-export type UserT = typeof users.$inferSelect;
+export type NewUserT = typeof usersT.$inferInsert;
+export type UserT = typeof usersT.$inferSelect;
 
-export const userHikes = sqliteTable("user_hikes", {
+export const userHikesT = sqliteTable("user_hikes", {
   id: integer("id", { mode: "number" })
     .primaryKey({ autoIncrement: true })
     .notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => users.id),
-  hikeId: text("hike_id")
+    .references(() => usersT.id),
+  hikeId: integer("hike_id")
     .notNull()
-    .references(() => hikes.id),
+    .references(() => hikesT.id),
   attended: text("attended"),
 });
 
-export type NewUserHikeT = typeof userHikes.$inferInsert;
-export type UserHikeT = typeof userHikes.$inferSelect;
+export type NewUserHikeT = typeof userHikesT.$inferInsert;
+export type UserHikeT = typeof userHikesT.$inferSelect;
 
-export const hikes = sqliteTable("hikes", {
+export const hikesT = sqliteTable("hikes", {
   id: integer("id", { mode: "number" })
     .primaryKey({ autoIncrement: true })
     .notNull(),
   name: text("name").notNull(),
-  baseHikeId: text("base_hike_id").references(() => baseHikes.id),
-  date: integer("date", { mode: "timestamp" }),
+  baseHikeId: text("base_hike_id").references(() => baseHikesT.id),
+  date: text("date"),
 });
 
-export type NewHikeT = typeof hikes.$inferInsert;
-export type HikeT = typeof hikes.$inferSelect;
+export type NewHikeT = typeof hikesT.$inferInsert;
+export type HikeT = typeof hikesT.$inferSelect;
 
-export const baseHikes = sqliteTable("base_hikes", {
+export const baseHikesT = sqliteTable("base_hikes", {
   id: integer("id", { mode: "number" })
     .primaryKey({ autoIncrement: true })
     .notNull(),
   name: text("name").notNull(),
 });
 
-export type NewBaseHikeT = typeof baseHikes.$inferInsert;
-export type BaseHikeT = typeof baseHikes.$inferSelect;
+export type NewBaseHikeT = typeof baseHikesT.$inferInsert;
+export type BaseHikeT = typeof baseHikesT.$inferSelect;
 
 export const usersOld1 = sqliteTable("users", {
   id: text("id").primaryKey().notNull(),

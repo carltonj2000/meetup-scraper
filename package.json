@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.12.3",
     "concurrently": "^8.2.2",
     "tsx": "^4.7.1"

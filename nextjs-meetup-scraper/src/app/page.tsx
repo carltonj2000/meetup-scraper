@@ -1,23 +1,41 @@
 "use client";
-import Browser from "./browser";
-import GetMembersHikes from "./getMemberHikes";
 import GetMembersLink from "./getMemberLinks";
+import { Button } from "@/components/ui/button";
+import gmHs from "./getMemberHikes";
+import { getPath } from "./util";
 
 function Home() {
   return (
     <main className="max-w-xl mx-auto bg-gray-50 py-4 flex flex-col gap-3 items-center justify-center">
-      <Browser action="openBrowser" description="Open Meetup" />
-      <Browser action="login" description="Login" />
-      {/* <Browser action="haslv" description="Select Group" /> */}
-      <GetMembersHikes />
-      <div className="flex gap-1">
-        <Browser action="toHere" description="To Here" variant="outline" />
-      </div>
-      <Browser action="member/11614620" description="Select Member" />
+      <Button onClick={async () => await getPath("openBrowser")}>
+        Open Meetup
+      </Button>
+      <Button onClick={async () => await getPath("login")}>Login</Button>
+      <Button onClick={async () => await gmHs()}>Get Member Hikes</Button>
+      <Button
+        onClick={async () => {
+          await getPath("openBrowser");
+          await getPath("login");
+          await gmHs();
+        }}
+        variant="outline"
+      >
+        To Here
+      </Button>
+      <Button onClick={async () => await getPath("member/11614620")}>
+        Select Member
+      </Button>
       <GetMembersLink />
-      <Browser action="db/members" description="Show Members" showJson={true} />
-      <Browser action="scroll" description="Scroll To End" />
-      <Browser action="closeBrowser" description="Close Browser" />
+      <Button onClick={async () => await getPath("db/members")}>
+        Get Member
+      </Button>
+      <Button onClick={async () => await getPath("scroll")}>
+        Scroll To End
+      </Button>
+      {/* <Browser action="haslv" description="Select Group" /> */}
+      <Button onClick={async () => await getPath("closeBrowser")}>
+        Close Browser
+      </Button>
     </main>
   );
 }

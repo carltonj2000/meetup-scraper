@@ -1,34 +1,41 @@
 import { browser, page } from "./index";
 import { JSDOM } from "jsdom";
 import "dotenv/config";
+import { scroll } from "./scroll";
 
 export const hikes = async (c: any) => {
-  console.log("member hikes");
+  console.log("get member hikes from web");
   const ah = "Attendance history";
   if (!browser || !page) return c.json({ error: "browser or page not open" });
   let urlHns;
+  let name;
   try {
     const body = await c.req.json();
     urlHns = body.urlHns;
+    name = body.name;
   } catch (e) {
     urlHns = process.env.HIKE_URL;
+    name = "Use Default/Test URL";
   }
-  await new Promise((r) => setTimeout(r, 3000));
   await page.goto(urlHns);
+  console.log({ name, urlHns });
+  await scroll(c);
   page.setDefaultTimeout(10000);
   try {
-    await page.waitForSelector(`h3 ::-p-text(${ah})`);
+    await page.waitForSelector(`h3 ::-p-text(${ah})`, { timeout: 3000 });
   } catch (e) {
     return c.json({ message: "member hikes", hikes: [] });
   }
   let moreHikes = true;
   while (moreHikes) {
     try {
+      await scroll(c);
       const moreHbtn = await page.waitForSelector(
         "button ::-p-text(Show more events)",
         { timeout: 2000 }
       );
       moreHbtn.click();
+      console.log("moreHbtn.click();");
       moreHbtn.dispose();
     } catch (e) {
       moreHikes = false;
@@ -55,12 +62,11 @@ export const hikes = async (c: any) => {
     const child = children[i];
     const children2 = [...child.children];
     const hikeNdate = [...children2[1].children];
-    const hike = hikeNdate[0].textContent;
+    const name = hikeNdate[0].textContent;
     const date = hikeNdate[1].textContent;
     const goNoGoA = children2[2].textContent?.split("\n");
     const goNoGo = goNoGoA[goNoGoA?.length - 1];
-    console.log({ hike, date, goNoGo, i, len: children.length });
-    hikes.push({ hike, date, goNoGo });
+    hikes.push({ name, date, goNoGo });
   }
 
   // await updateMemberLink(id, urlHns);
