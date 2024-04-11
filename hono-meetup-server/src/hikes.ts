@@ -2,7 +2,6 @@ import { browser, page } from "./index";
 import { JSDOM } from "jsdom";
 import "dotenv/config";
 import { scroll } from "./scroll";
-import { getMemberHikes } from "./db";
 
 const findTextInElem = async (elem: string, text: string) => {
   const elems = await page.$$eval(
@@ -25,16 +24,16 @@ export const hikes = async (c: any) => {
   if (!browser || !page) return c.json({ error: "browser or page not open" });
   let urlHns;
   let name;
-  let id;
+  let hikesOld;
   try {
     const body = await c.req.json();
     urlHns = body.urlHns;
     name = body.name;
-    id = body.id;
+    hikesOld = body.hikesOld;
   } catch (e) {
     urlHns = process.env.HIKE_URL;
     name = "Use Default/Test URL";
-    id = "178438672";
+    hikesOld = 0;
   }
   await page.goto(urlHns);
   await scroll(c);
@@ -60,9 +59,12 @@ export const hikes = async (c: any) => {
     if (sidCdTc?.includes("“not going”")) notGoing = sid.textContent;
   }
 
-  const hikeCount = await getMemberHikes("178438672");
-  console.log({ going, notGoing, hikeCount, id });
+  console.log({ going, notGoing, hikesOld });
 
+  if (!going || !notGoing)
+    return c.json({ error: "going or not going invalid", going, notGoing });
+  if (hikesOld === going + notGoing)
+    return c.json({ message: "member hikes", hikes: [] });
   let moreHikes = true;
   while (moreHikes) {
     try {
@@ -87,7 +89,7 @@ export const hikes = async (c: any) => {
   let idx = 0;
   const children = [...parent.children];
 
-  const hikes: any = [];
+  const hikesNew: any = [];
   for (let i = 0; i < children.length; i++) {
     if (idx++ < start) continue;
     const child = children[i];
@@ -97,9 +99,9 @@ export const hikes = async (c: any) => {
     const date = hikeNdate[1].textContent;
     const goNoGoA = children2[2].textContent?.split("\n");
     const goNoGo = goNoGoA[goNoGoA?.length - 1];
-    hikes.push({ name, date, goNoGo });
+    hikesNew.push({ name, date, goNoGo });
   }
 
   // await updateMemberLink(id, urlHns);
-  return c.json({ message: "member hikes", hikes });
+  return c.json({ message: "member hikes", hikes: hikesNew });
 };

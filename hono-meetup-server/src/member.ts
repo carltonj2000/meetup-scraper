@@ -1,5 +1,5 @@
 import { browser, page } from "./index";
-import { updateMemberLink } from "./db";
+// import { updateMemberLink } from "./db";
 import { JSDOM } from "jsdom";
 
 const getEventsCount = async (c: any) => {
@@ -85,8 +85,8 @@ export const member = async (c: any, idIn?: string = "11614620") => {
       break;
     }
   }
-  await updateMemberLink(id, urlHns);
-  if (!url) return c.json({ error: "No membership details url found." });
+  // await updateMemberLink(id, urlHns); // move to nextjs client
+  if (!urlHns) return c.json({ error: "No membership details url found." });
 
-  return c.json({ message: "member", id });
+  return c.json({ message: "member", id, urlHns });
 };

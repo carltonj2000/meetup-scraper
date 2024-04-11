@@ -16,9 +16,6 @@ export type UserT = typeof usersT.$inferSelect;
 export const userHikesT = sqliteTable(
   "user_hikes",
   {
-    id: integer("id", { mode: "number" })
-      .primaryKey({ autoIncrement: true })
-      .notNull(),
     userId: text("user_id")
       .notNull()
       .references(() => usersT.id),

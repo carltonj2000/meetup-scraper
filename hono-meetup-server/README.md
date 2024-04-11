@@ -5,8 +5,6 @@
 ```bash
 npm create hono@latest hono-meetup-server
 npm install dotenv --save
-npm i drizzle-orm better-sqlite3
-npm i -D drizzle-kit
 ```
 
 ## Old Instructions

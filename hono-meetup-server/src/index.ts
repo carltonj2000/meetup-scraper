@@ -1,13 +1,11 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import dbRoutes from "./db";
 import { hikes } from "./hikes";
 import { closeBrowser, login, openBrowser } from "./openCloseLogin";
 import { haslv, members } from "./haslvMembers";
 import { member } from "./member";
 import { scroll } from "./scroll";
-import { toHere } from "./here";
 
 const app = new Hono();
 app.use(
@@ -25,7 +23,6 @@ app.use(
     credentials: true,
   })
 );
-app.route("/db", dbRoutes);
 
 export let browser: any = null;
 export let page: any = null;
@@ -42,7 +39,6 @@ app.get("/members", async (c) => await members(c));
 app.get("/member/:id", async (c) => await member(c));
 app.post("/hikes", async (c) => await hikes(c));
 app.get("/scroll", async (c) => await scroll(c));
-app.get("/toHere", async (c) => await toHere(c));
 
 const port = 3333;
 console.log(`Server is running on port ${port}`);

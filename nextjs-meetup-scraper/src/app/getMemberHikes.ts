@@ -1,16 +1,27 @@
-"use client";
-import { getPath, postPath } from "./util";
+"use server";
+import { members, getUserHikes, hikesSave } from "../db";
 
-export default async function getMembersHikes() {
-  const j = await getPath("db/members");
-  const ms = j.members;
+const postPath = async (p: any, b: any) => {
+  const res = await fetch(`http://localhost:3333/${p}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(b),
+  });
+  const json = await res.json();
+  return json;
+};
+
+export const getMembersHikes = async () => {
+  console.log("getMembersHikes");
+  const ms = await members();
   let stopAt = 1;
   for (let i = 2; i < ms.length; i++) {
     const user = ms[i];
+    const hikesOld = await getUserHikes(user.id);
     if (stopAt-- <= 0) break;
-    const hikesRes = await postPath("hikes", user);
+    const hikesRes = await postPath("hikes", { ...user, hikesOld });
     const hikes = hikesRes.hikes;
-    if (user.hikes === hikes.length) continue;
-    await postPath("db/hikes", { user, hikes });
+    if (hikesOld === hikes.length) continue;
+    // hikesSave({ user, hikes });
   }
-}
+};

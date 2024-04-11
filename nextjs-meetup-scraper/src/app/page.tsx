@@ -1,41 +1,66 @@
 "use client";
 import GetMembersLink from "./getMemberLinks";
 import { Button } from "@/components/ui/button";
-import gmHs from "./getMemberHikes";
+import { getMembersHikes } from "./getMemberHikes";
 import { getPath } from "./util";
+import { deleteHikes, deleteUsersHikes, members } from "../db/index";
+import { restartNodemon } from "./actions";
 
 function Home() {
   return (
     <main className="max-w-xl mx-auto bg-gray-50 py-4 flex flex-col gap-3 items-center justify-center">
-      <Button onClick={async () => await getPath("openBrowser")}>
-        Open Meetup
-      </Button>
-      <Button onClick={async () => await getPath("login")}>Login</Button>
-      <Button onClick={async () => await gmHs()}>Get Member Hikes</Button>
-      <Button
-        onClick={async () => {
-          await getPath("openBrowser");
-          await getPath("login");
-          await gmHs();
-        }}
-        variant="outline"
-      >
-        To Here
-      </Button>
-      <Button onClick={async () => await getPath("member/11614620")}>
-        Select Member
-      </Button>
-      <GetMembersLink />
-      <Button onClick={async () => await getPath("db/members")}>
-        Get Member
-      </Button>
-      <Button onClick={async () => await getPath("scroll")}>
-        Scroll To End
-      </Button>
-      {/* <Browser action="haslv" description="Select Group" /> */}
-      <Button onClick={async () => await getPath("closeBrowser")}>
-        Close Browser
-      </Button>
+      <div className="flex gap-4">
+        <div className="flex flex-col gap-2">
+          <Button onClick={async () => await getPath("openBrowser")}>
+            Open Meetup
+          </Button>
+          <Button onClick={async () => await getPath("login")}>Login</Button>
+          <Button onClick={async () => await getMembersHikes()}>
+            Get Member Hikes
+          </Button>
+          <Button
+            onClick={async () => {
+              await getPath("openBrowser");
+              await getPath("login");
+              await getMembersHikes();
+            }}
+            variant="outline"
+          >
+            To Here
+          </Button>
+          <Button onClick={async () => await getPath("member/11614620")}>
+            Select Member
+          </Button>
+          <GetMembersLink />
+          <Button onClick={async () => await members()}>Get Member</Button>
+          <Button onClick={async () => await getPath("scroll")}>
+            Scroll To End
+          </Button>
+          {/* <Browser action="haslv" description="Select Group" /> */}
+          <Button onClick={async () => await getPath("closeBrowser")}>
+            Close Browser
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2 min-h-fit justify-end">
+          <Button variant="destructive" type="submit" onClick={deleteHikes}>
+            Delete Base Hikes
+          </Button>
+          <Button
+            variant="destructive"
+            type="submit"
+            onClick={deleteUsersHikes}
+          >
+            Delete Users Hikes
+          </Button>
+          <Button
+            variant="destructive"
+            type="submit"
+            onClick={async () => await restartNodemon()}
+          >
+            Restart NodeMon
+          </Button>
+        </div>
+      </div>
     </main>
   );
 }
