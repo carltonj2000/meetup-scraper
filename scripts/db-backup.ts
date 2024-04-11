@@ -4,7 +4,7 @@ import path from "path";
 const fileName = "sqlite";
 const fileExt = "db";
 const srcDir = "/renderws/carltonData/cj2024/code/monorepo/meetup-scraper";
-const dstDir = "/renderws/carltonData/cj2024/backups/meetup-scraper/";
+const dstDir = "/renderws/carltonData/cj2024/haslv/backups/meetup-scraper/";
 const s = path.join(srcDir, `${fileName}.${fileExt}`);
 
 const months = [

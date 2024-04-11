@@ -94,4 +94,8 @@ export const updateMemberHikes = async (id: string, hikes: number) => {
     .run();
 };
 
+export const getMemberHikes = async (id: string) => {
+  return await db.select().from(userHikesT).where(eq(userHikesT.userId, id));
+};
+
 export default dbRoute;

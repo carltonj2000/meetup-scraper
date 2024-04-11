@@ -1,4 +1,4 @@
-import { text, sqliteTable, integer } from "drizzle-orm/sqlite-core";
+import { text, sqliteTable, integer, unique } from "drizzle-orm/sqlite-core";
 
 export const usersT = sqliteTable("users", {
   id: text("id").primaryKey().notNull(),
@@ -13,30 +13,38 @@ export const usersT = sqliteTable("users", {
 export type NewUserT = typeof usersT.$inferInsert;
 export type UserT = typeof usersT.$inferSelect;
 
-export const userHikesT = sqliteTable("user_hikes", {
-  id: integer("id", { mode: "number" })
-    .primaryKey({ autoIncrement: true })
-    .notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => usersT.id),
-  hikeId: integer("hike_id")
-    .notNull()
-    .references(() => hikesT.id),
-  attended: text("attended"),
-});
+export const userHikesT = sqliteTable(
+  "user_hikes",
+  {
+    id: integer("id", { mode: "number" })
+      .primaryKey({ autoIncrement: true })
+      .notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersT.id),
+    hikeId: integer("hike_id")
+      .notNull()
+      .references(() => hikesT.id),
+    attended: text("attended"),
+  },
+  (t) => ({ unq: unique("hike_per_user").on(t.userId, t.hikeId) })
+);
 
 export type NewUserHikeT = typeof userHikesT.$inferInsert;
 export type UserHikeT = typeof userHikesT.$inferSelect;
 
-export const hikesT = sqliteTable("hikes", {
-  id: integer("id", { mode: "number" })
-    .primaryKey({ autoIncrement: true })
-    .notNull(),
-  name: text("name").notNull(),
-  baseHikeId: text("base_hike_id").references(() => baseHikesT.id),
-  date: text("date"),
-});
+export const hikesT = sqliteTable(
+  "hikes",
+  {
+    id: integer("id", { mode: "number" })
+      .primaryKey({ autoIncrement: true })
+      .notNull(),
+    name: text("name").notNull(),
+    baseHikeId: text("base_hike_id").references(() => baseHikesT.id),
+    date: text("date"),
+  },
+  (t) => ({ unq: unique("hike_per_date").on(t.name, t.date) })
+);
 
 export type NewHikeT = typeof hikesT.$inferInsert;
 export type HikeT = typeof hikesT.$inferSelect;
