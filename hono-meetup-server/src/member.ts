@@ -1,5 +1,4 @@
 import { browser, page } from "./index";
-// import { updateMemberLink } from "./db";
 import { JSDOM } from "jsdom";
 
 const getEventsCount = async (c: any) => {

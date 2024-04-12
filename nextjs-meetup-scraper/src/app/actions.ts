@@ -4,7 +4,10 @@ import path from "path";
 
 export const restartNodemon = async () => {
   console.log("restart nodemon");
-  const file = path.join(process.env.PWD!, "../hono-meetup-server/src/util.ts");
+  const file = path.join(
+    process.env.PWD!,
+    "../hono-meetup-server/src/scroll.ts"
+  );
   const date = new Date();
   fs.utimes(file, date, date);
 };

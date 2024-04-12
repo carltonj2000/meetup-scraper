@@ -14,14 +14,14 @@ const postPath = async (p: any, b: any) => {
 export const getMembersHikes = async () => {
   console.log("getMembersHikes");
   const ms = await members();
-  let stopAt = 1;
-  for (let i = 2; i < ms.length; i++) {
+  let stopAt = 10;
+  for (let i = 0; i < ms.length; i++) {
     const user = ms[i];
     const hikesOld = await getUserHikes(user.id);
     if (stopAt-- <= 0) break;
     const hikesRes = await postPath("hikes", { ...user, hikesOld });
     const hikes = hikesRes.hikes;
-    if (hikesOld === hikes.length) continue;
-    // hikesSave({ user, hikes });
+    if (hikesOld.length === hikes.length) continue;
+    hikesSave({ user, hikes });
   }
 };

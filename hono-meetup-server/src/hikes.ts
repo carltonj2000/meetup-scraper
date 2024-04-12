@@ -48,21 +48,19 @@ export const hikes = async (c: any) => {
   let { document } = new JSDOM(h3p).window;
 
   const spanInDiv = document.querySelectorAll("div > span");
-  let going;
-  let notGoing;
+  let going = "0";
+  let notGoing = "0";
   for (let i = 0; i < spanInDiv.length; i++) {
     const sid = spanInDiv[i];
     const sidTc = sid.textContent;
     const sidCdTc = sid.closest("div")?.textContent;
     console.log({ sidTc, sidCdTc, inc: sidCdTc?.includes("not going") });
-    if (sidCdTc?.includes("“going”")) going = sid.textContent;
-    if (sidCdTc?.includes("“not going”")) notGoing = sid.textContent;
+    if (sidCdTc?.includes("“going”")) going = sid.textContent || "0";
+    if (sidCdTc?.includes("“not going”")) notGoing = sid.textContent || "0";
   }
 
   console.log({ going, notGoing, hikesOld });
 
-  if (!going || !notGoing)
-    return c.json({ error: "going or not going invalid", going, notGoing });
   if (hikesOld === going + notGoing)
     return c.json({ message: "member hikes", hikes: [] });
   let moreHikes = true;

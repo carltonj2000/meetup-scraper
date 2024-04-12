@@ -3,7 +3,7 @@ import { CSVToArray } from "./csv2array";
 import fs from "fs/promises";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { hikesT, userHikesT, usersT, usersOld1 } from "../schema";
+import { hikesT, userHikesT, usersT, usersOld1, baseHikesT } from "../schema";
 import { eq, sql, and } from "drizzle-orm";
 
 const dbFile = process.env.DB;
@@ -58,7 +58,7 @@ export const hikesSave = async (data: any) => {
   console.log("save members hikes to db");
   const { user, hikes } = data;
   const userDb = await db.select().from(usersT).where(eq(usersT.id, user.id));
-  if (user.hikes !== userDb[0].hikes) {
+  if (hikes.length !== userDb[0].hikes) {
     await db
       .update(usersT)
       .set({ hikes: hikes.length })
@@ -76,6 +76,13 @@ export const hikesSave = async (data: any) => {
         .values({ name: hike.name, date: hike.date })
         .returning();
     }
+    const userHikesDb = await db
+      .select()
+      .from(userHikesT)
+      .where(
+        and(eq(userHikesT.userId, user.id), eq(userHikesT.hikeId, hikeDb[0].id))
+      );
+    if (userHikesDb.length !== 0) continue;
     const userHike = {
       userId: user.id,
       hikeId: hikeDb[0].id,
