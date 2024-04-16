@@ -2,6 +2,8 @@ import { browser, page } from "./index";
 import { JSDOM } from "jsdom";
 import "dotenv/config";
 import { scroll } from "./scroll";
+import fs from "fs/promises";
+import path from "path";
 
 const findTextInElem = async (elem: string, text: string) => {
   const elems = await page.$$eval(
@@ -18,23 +20,40 @@ const findTextInElem = async (elem: string, text: string) => {
   return elems;
 };
 
+const getLogger = (logFile: string) => {
+  return async (msg: string) => {
+    console.log(msg);
+    if (logFile) {
+      const fh = await fs.open(logFile, "a");
+      fs.writeFile(fh, msg + "\n");
+      await fh.close();
+    }
+  };
+};
+
 export const hikes = async (c: any) => {
-  console.log("get member hikes from web");
-  const ah = "Attendance history";
+  console.log("hikes");
   if (!browser || !page) return c.json({ error: "browser or page not open" });
-  let urlHns;
-  let name;
-  let hikesOld;
+  let urlHns, name, hikesOld, memberIdx, logFile;
   try {
     const body = await c.req.json();
     urlHns = body.urlHns;
     name = body.name;
     hikesOld = body.hikesOld;
+    memberIdx = body.i;
+    logFile = body.logFile;
   } catch (e) {
     urlHns = process.env.HIKE_URL;
     name = "Use Default/Test URL";
     hikesOld = 0;
+    memberIdx = 0;
+    logFile = path.join("~/", "getMembersHikes.log");
   }
+  console.log({ logFile });
+  const logger = await getLogger(null);
+  await logger("get member hikes from web");
+  const ah = "Attendance history";
+  await logger(JSON.stringify({ urlHns, memberIdx }));
   await page.goto(urlHns);
   await scroll(c);
   page.setDefaultTimeout(10000);
@@ -54,16 +73,16 @@ export const hikes = async (c: any) => {
     const sid = spanInDiv[i];
     const sidTc = sid.textContent;
     const sidCdTc = sid.closest("div")?.textContent;
-    console.log({ sidTc, sidCdTc, inc: sidCdTc?.includes("not going") });
     if (sidCdTc?.includes("“going”")) going = sid.textContent || "0";
     if (sidCdTc?.includes("“not going”")) notGoing = sid.textContent || "0";
   }
 
-  console.log({ going, notGoing, hikesOld });
+  await logger(JSON.stringify({ going, notGoing, hikesOld }));
 
   if (hikesOld === going + notGoing)
     return c.json({ message: "member hikes", hikes: [] });
   let moreHikes = true;
+  let count = 0;
   while (moreHikes) {
     try {
       await scroll(c);
@@ -72,11 +91,12 @@ export const hikes = async (c: any) => {
         { timeout: 2000 }
       );
       moreHbtn.click();
-      console.log("moreHbtn.click();");
+      logger(`moreHbtn.click(); ${count}\r`);
       moreHbtn.dispose();
     } catch (e) {
       moreHikes = false;
     }
+    count++;
   }
 
   h3p = await findTextInElem("h3", ah);

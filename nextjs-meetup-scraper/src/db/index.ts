@@ -3,8 +3,20 @@ import { CSVToArray } from "./csv2array";
 import fs from "fs/promises";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { hikesT, userHikesT, usersT, usersOld1, baseHikesT } from "../schema";
+import {
+  hikesT,
+  userHikesT,
+  usersT,
+  usersOld1,
+  baseHikesT,
+  baseHikesLevelT,
+} from "../schema";
 import { eq, sql, and } from "drizzle-orm";
+import {
+  hikes as blHikes,
+  levels as blLevels,
+  colorsLevel as blColors,
+} from "./seedBaseHikes";
 
 const dbFile = process.env.DB;
 const dbErr = " Server starting without a DB connection!";
@@ -35,7 +47,7 @@ if (!dbOld) {
 export const json2db = async () => {
   const csvFile = process.env.CSV_FILE;
   if (!csvFile) {
-    return c.json({ message: "Did not find CSV_FILE environment variable." });
+    return { message: "Did not find CSV_FILE environment variable." };
   }
   const membersStr = (await fs.readFile(csvFile)).toString();
   const membersNh = CSVToArray(membersStr, ",");
@@ -105,14 +117,47 @@ export const updateMemberHikes = async (id: string, hikes: number) =>
 export const getUserHikes = async (id: string) =>
   await db.select().from(userHikesT).where(eq(userHikesT.userId, id));
 
-export const restore = async (c: any) => {
+export const restore = async () => {
   console.log("restoring");
   const usersOld = await dbOld.select().from(usersOld1);
   usersOld.forEach(async (userOld) => {
     await db.insert(usersOld1).values({ ...userOld });
   });
-  return c.json({ message: "hikes restored from backup" });
+  return { message: "hikes restored from backup" };
 };
 
 export const deleteUsersHikes = async () => await db.delete(userHikesT);
 export const deleteHikes = async () => await db.delete(hikesT);
+
+export const seedBaseHikesLevels = async () => {
+  for (let i = 0; i < blLevels.length; i++) {
+    const baseHikeLevel = await db
+      .select()
+      .from(baseHikesLevelT)
+      .where(eq(baseHikesLevelT.id, i));
+    if (baseHikeLevel.length) continue;
+    await db
+      .insert(baseHikesLevelT)
+      .values({ id: i, name: blLevels[i], color: blColors[i] });
+  }
+};
+
+export const seedBaseHikes = async () => {
+  for (let i = 0; i < blHikes.length; i++) {
+    const levelHikes = blHikes[i];
+    for (let j = 0; j < levelHikes.length; j++) {
+      const hike = levelHikes[j];
+      const hikeDb = await db
+        .select()
+        .from(baseHikesT)
+        .where(eq(baseHikesT.name, hike[0]));
+      if (hikeDb.length) continue;
+      await db.insert(baseHikesT).values({ name: hike[0], level: i });
+    }
+  }
+};
+
+export const getBaseHikes = async () => {
+  const baseHike = await db.select().from(baseHikesT);
+  return baseHike;
+};

@@ -24,10 +24,10 @@ export default function RootLayout({
           <Link href="/">
             <Image width="32" height="32" src="/logo.svg" alt="logo" />
           </Link>
-          <h1>Meetup Information</h1>
+          <h1>Meetup Scraper</h1>
           <div className="text-blue-400 text-lg flex gap-3 items-center">
-            <Link href="/db" className="underline">
-              Database
+            <Link href="/stats" className="underline">
+              View Stats
             </Link>
           </div>
         </nav>

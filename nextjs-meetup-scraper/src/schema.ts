@@ -51,10 +51,20 @@ export const baseHikesT = sqliteTable("base_hikes", {
     .primaryKey({ autoIncrement: true })
     .notNull(),
   name: text("name").notNull(),
+  level: integer("level").references(() => baseHikesLevelT.id),
 });
 
 export type NewBaseHikeT = typeof baseHikesT.$inferInsert;
 export type BaseHikeT = typeof baseHikesT.$inferSelect;
+
+export const baseHikesLevelT = sqliteTable("base_level_hikes", {
+  id: integer("level", { mode: "number" }).primaryKey().notNull(),
+  name: text("name").notNull(),
+  color: text("color").notNull(),
+});
+
+export type NewBaseHikeLevelT = typeof baseHikesLevelT.$inferInsert;
+export type BaseHikeLevelT = typeof baseHikesLevelT.$inferSelect;
 
 export const usersOld1 = sqliteTable("users", {
   id: text("id").primaryKey().notNull(),
