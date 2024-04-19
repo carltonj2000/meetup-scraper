@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import { hikes } from "./hikes";
 import { closeBrowser, login, openBrowser } from "./openCloseLogin";
 import { haslv, members } from "./haslvMembers";
@@ -8,6 +9,7 @@ import { member } from "./member";
 import { scroll } from "./scroll";
 
 const app = new Hono();
+app.use(logger());
 app.use(
   "/*",
   cors({

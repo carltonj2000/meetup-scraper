@@ -11,7 +11,7 @@ import {
   baseHikesT,
   baseHikesLevelT,
 } from "../schema";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, sql, and, asc, desc } from "drizzle-orm";
 import {
   hikes as blHikes,
   levels as blLevels,
@@ -64,17 +64,23 @@ export const json2db = async () => {
   return { message: "json2db", cj: membersFew, membersIns };
 };
 
+export const getUserById = async (id: string) =>
+  await db.select().from(usersT).where(eq(usersT.id, id));
 export const members = async () => await db.select().from(usersT);
+export const membersByHikes = async () =>
+  await db.select().from(usersT).orderBy(desc(usersT.hikes));
 
 export const hikesSave = async (data: any) => {
-  console.log("save members hikes to db");
   const { user, hikes } = data;
   const userDb = await db.select().from(usersT).where(eq(usersT.id, user.id));
   if (hikes.length !== userDb[0].hikes) {
-    await db
+    const hgt =
+      hikes.length > (userDb[0].hikes || 0) ? hikes.length : userDb[0].hikes;
+    const h = await db
       .update(usersT)
-      .set({ hikes: hikes.length })
-      .where(eq(usersT.id, user.id));
+      .set({ hikes: hgt })
+      .where(eq(usersT.id, user.id))
+      .returning({ hikes: usersT.hikes });
   }
   for (let i = 0; i < hikes.length; i++) {
     const hike = hikes[i];
@@ -118,7 +124,6 @@ export const getUserHikes = async (id: string) =>
   await db.select().from(userHikesT).where(eq(userHikesT.userId, id));
 
 export const restore = async () => {
-  console.log("restoring");
   const usersOld = await dbOld.select().from(usersOld1);
   usersOld.forEach(async (userOld) => {
     await db.insert(usersOld1).values({ ...userOld });
@@ -160,4 +165,20 @@ export const seedBaseHikes = async () => {
 export const getBaseHikes = async () => {
   const baseHike = await db.select().from(baseHikesT);
   return baseHike;
+};
+
+export const updateUsersHikes = async () => {
+  const users = await db.select().from(usersT);
+  Promise.all(
+    users.map(async (user) => {
+      const hikes = await db
+        .select()
+        .from(userHikesT)
+        .where(eq(userHikesT.userId, user.id));
+      db.update(usersT)
+        .set({ hikes: hikes.length })
+        .where(eq(usersT.id, user.id))
+        .run();
+    })
+  );
 };

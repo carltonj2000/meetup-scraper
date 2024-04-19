@@ -11,6 +11,7 @@ import {
   restore,
   seedBaseHikes,
   seedBaseHikesLevels,
+  updateUsersHikes,
 } from "../db/index";
 import { restartNodemon } from "./actions";
 import { toast } from "@/components/ui/use-toast";
@@ -62,6 +63,12 @@ function Home() {
           </Button>
         </div>
         <div className="flex flex-col gap-2 min-h-fit justify-end">
+          <Button
+            variant="destructive"
+            onClick={async () => await updateUsersHikes()}
+          >
+            Update Users Hikes
+          </Button>
           <Button
             variant="destructive"
             onClick={async () => await seedBaseHikes()}

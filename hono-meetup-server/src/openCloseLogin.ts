@@ -13,7 +13,10 @@ if (!email || !password || !url) {
 }
 
 export const openBrowser = async (c: any) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: false,
+    protocolTimeout: 360000,
+  });
   setBrowser(browser);
   const page = await browser.newPage();
   setPage(page);
