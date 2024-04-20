@@ -18,7 +18,7 @@ async function Stats() {
                 className={`${level % 2 ? "bg-blue-200" : "bg-blue-300"} p-2`}
               >
                 <div className="flex flex-col items-center gap-2">
-                  <div>{level + 1}</div>
+                  <div>{level}</div>
                   <div>{levels[level]}</div>
                   <div>{colorsLevel[level]}</div>
                 </div>

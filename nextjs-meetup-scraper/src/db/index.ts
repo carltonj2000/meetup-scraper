@@ -11,7 +11,7 @@ import {
   baseHikesT,
   baseHikesLevelT,
 } from "../schema";
-import { eq, sql, and, asc, desc } from "drizzle-orm";
+import { eq, sql, and, desc } from "drizzle-orm";
 import {
   hikes as blHikes,
   levels as blLevels,
@@ -69,6 +69,36 @@ export const getUserById = async (id: string) =>
 export const members = async () => await db.select().from(usersT);
 export const membersByHikes = async () =>
   await db.select().from(usersT).orderBy(desc(usersT.hikes));
+export const membersByHikesAttended = async () => {
+  const users = await db.select().from(usersT);
+  const hikesAttended = await Promise.all(
+    users.map(async (user) => {
+      const hikes = await db
+        .select()
+        .from(userHikesT)
+        .where(eq(userHikesT.userId, user.id));
+      const attended = hikes.reduce(
+        (prev, hike) => (hike.attended === "Went" ? prev + 1 : prev),
+        0
+      );
+      return { ...user, attended };
+    })
+  );
+  const hikesAttendedSorted = hikesAttended.sort((a, b) =>
+    a.attended > b.attended ? -1 : 1
+  );
+  return hikesAttendedSorted;
+};
+export const hikes = async () =>
+  (await db.select().from(hikesT)).sort((a, b) => a.name.localeCompare(b.name));
+export const getHikesById = async (id: number) =>
+  (await db.select().from(hikesT).where(eq(hikesT.id, id)))[0];
+export const getUserHikes = async (id: string) =>
+  await db.select().from(userHikesT).where(eq(userHikesT.userId, id));
+export const getBaseHikesByLevel = async (level: number) =>
+  (await db.select().from(baseHikesT).where(eq(baseHikesT.level, level))).sort(
+    (a, b) => a.name.localeCompare(b.name)
+  );
 
 export const hikesSave = async (data: any) => {
   const { user, hikes } = data;
@@ -120,9 +150,6 @@ export const updateMemberHikes = async (id: string, hikes: number) =>
     .where(eq(usersT.id, id))
     .run();
 
-export const getUserHikes = async (id: string) =>
-  await db.select().from(userHikesT).where(eq(userHikesT.userId, id));
-
 export const restore = async () => {
   const usersOld = await dbOld.select().from(usersOld1);
   usersOld.forEach(async (userOld) => {
@@ -133,6 +160,9 @@ export const restore = async () => {
 
 export const deleteUsersHikes = async () => await db.delete(userHikesT);
 export const deleteHikes = async () => await db.delete(hikesT);
+export const deleteBaseHikes = async () => await db.delete(baseHikesT);
+export const deleteBaseHikesLevels = async () =>
+  await db.delete(baseHikesLevelT);
 
 export const seedBaseHikesLevels = async () => {
   for (let i = 0; i < blLevels.length; i++) {
@@ -162,10 +192,7 @@ export const seedBaseHikes = async () => {
   }
 };
 
-export const getBaseHikes = async () => {
-  const baseHike = await db.select().from(baseHikesT);
-  return baseHike;
-};
+export const getBaseHikes = async () => await db.select().from(baseHikesT);
 
 export const updateUsersHikes = async () => {
   const users = await db.select().from(usersT);

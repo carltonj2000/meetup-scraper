@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { getMembersHikes } from "./getMemberHikes";
 import { getPath } from "./util";
 import {
+  deleteBaseHikes,
+  deleteBaseHikesLevels,
   deleteHikes,
   deleteUsersHikes,
   json2db,
@@ -87,7 +89,18 @@ function Home() {
           <Button variant="destructive" onClick={async () => await restore()}>
             Restore Old To New Empty DB
           </Button>
-          <Button variant="destructive" type="submit" onClick={deleteHikes}>
+          <Button
+            variant="destructive"
+            type="submit"
+            onClick={async () => await deleteBaseHikesLevels()}
+          >
+            Delete Base Hikes Levels
+          </Button>
+          <Button
+            variant="destructive"
+            type="submit"
+            onClick={async () => await deleteBaseHikes()}
+          >
             Delete Base Hikes
           </Button>
           <Button

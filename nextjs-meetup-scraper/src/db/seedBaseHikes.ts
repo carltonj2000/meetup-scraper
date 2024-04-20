@@ -1,6 +1,15 @@
-export const colorsLevel = ["White", "Red", "Blue", "Green", "Orange", "Black"];
+export const colorsLevel = [
+  "Etc",
+  "White",
+  "Red",
+  "Blue",
+  "Green",
+  "Orange",
+  "Black",
+];
 
 export const levels = [
+  "Etc",
   "Low Roller",
   "Gambler",
   "Spinner",
@@ -10,6 +19,7 @@ export const levels = [
 ];
 
 export const hikes = [
+  [["Etc"]],
   [
     ["Muffins"],
     ["Kraft Loop"],

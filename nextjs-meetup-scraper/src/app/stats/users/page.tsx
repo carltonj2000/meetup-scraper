@@ -1,23 +1,23 @@
-import { membersByHikes } from "@/db";
+import { membersByHikesAttended } from "@/db";
 
 async function Users() {
-  const users = await membersByHikes();
+  const users = await membersByHikesAttended();
   return (
     <section className="max-w-xl mx-auto bg-gray-50 py-4 flex flex-col gap-3 items-center justify-center">
-      <p>Member Hikes</p>
+      <p>Members</p>
       <table>
         <thead className="font-bold text-gray-100">
           <tr>
-            <td className="p-4 bg-blue-400 text-center">Rank</td>
-            <td className="p-4 bg-blue-400 text-center">Hikes</td>
+            <td className="p-4 bg-blue-500 text-center">Rank</td>
+            <td className="p-4 bg-blue-500 text-center">Hikes</td>
             <td className="p-4 bg-blue-500 text-center">Name</td>
           </tr>
         </thead>
         <tbody>
-          {users.map(({ id, name, hikes }, i) => (
-            <tr key={id}>
+          {users.map(({ id, attended, name }, i) => (
+            <tr key={id} className={i % 2 === 0 ? "bg-blue-50" : "bg-blue-100"}>
               <td className="text-center">{i + 1}</td>
-              <td className="text-center">{hikes}</td>
+              <td className="text-center">{attended}</td>
               <td className="text-left pl-2">{name}</td>
             </tr>
           ))}
