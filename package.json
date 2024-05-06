@@ -21,6 +21,7 @@
     "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.12.3",
     "concurrently": "^8.2.2",
+    "drizzle-kit": "^0.20.18",
     "tsx": "^4.7.1"
   }
 }

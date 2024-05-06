@@ -1,7 +1,4 @@
 "use server";
-import { CSVToArray } from "./csv2array";
-import fs from "fs/promises";
-import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
 import {
   hikesT,
@@ -10,7 +7,7 @@ import {
   usersOld1,
   baseHikesT,
   baseHikesLevelT,
-} from "./schema";
+} from "../db/schema";
 import { eq, sql, and, desc } from "drizzle-orm";
 import {
   hikes as blHikes,
@@ -30,39 +27,6 @@ if (!db) {
   console.error("DB connection failed." + dbErr);
   process.exit(-1);
 }
-
-const dbFileOld = process.env.DB_OLD;
-const dbErrOld = " Server starting without a DBOld connection!";
-if (!dbFileOld) {
-  console.error("DB_OLD env not set." + dbErrOld);
-  process.exit(-1);
-}
-const sqliteOld = new Database(dbFileOld);
-const dbOld = drizzle(sqliteOld);
-if (!dbOld) {
-  console.error("DBOld connection failed." + dbErrOld);
-  process.exit(-1);
-}
-
-export const json2db = async () => {
-  const csvFile = process.env.CSV_FILE;
-  if (!csvFile) {
-    return { message: "Did not find CSV_FILE environment variable." };
-  }
-  const membersStr = (await fs.readFile(csvFile)).toString();
-  const membersNh = CSVToArray(membersStr, ",");
-  const members = membersNh.slice(1);
-  const membersIns = members.map((m: string[]) => ({
-    name: m[0],
-    id: m[3],
-    url: m[18],
-  }));
-  await db.insert(usersT).values(membersIns);
-  const membersFew = members.filter((m: any) =>
-    m[0].includes("Carlton Joseph")
-  );
-  return { message: "json2db", cj: membersFew, membersIns };
-};
 
 export const getUserById = async (id: string) =>
   (await db.select().from(usersT).where(eq(usersT.id, id)))[0];

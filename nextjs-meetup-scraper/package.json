@@ -11,6 +11,7 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@vercel/postgres": "^0.8.0",
     "better-sqlite3": "^9.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -28,7 +29,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
-    "drizzle-kit": "^0.20.16",
+    "drizzle-kit": "^0.20.18",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
     "postcss": "^8",
