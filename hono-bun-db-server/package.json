@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "dev": "bun run --hot src/index.tsx",
+    "pg:generate": "drizzle-kit generate:pg",
+    "pg:push": "npx drizzle-kit push:pg",
+    "pg:migrate": "npm run pg:generate && npm run pg:push",
+    "pg:studio": "npx drizzle-kit studio"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.8.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.20.18"
+  }
+}

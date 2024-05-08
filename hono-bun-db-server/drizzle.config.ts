@@ -3,17 +3,15 @@ import path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: path.join(__dirname, ".env.local") });
 
-const dbFile = process.env.DB;
-if (!dbFile) {
-  console.error("DB env not set.");
+const connectionString = process.env.POSTGRES_URL;
+if (!connectionString) {
+  console.error("POSTGRES_URL env not set.");
   process.exit(-1);
 }
 
 export default {
   schema: "./src/schema.ts",
-  out: "./drizzle",
-  driver: "better-sqlite",
-  dbCredentials: {
-    url: dbFile,
-  },
+  out: "./drizzle/pg",
+  driver: "pg",
+  dbCredentials: { connectionString },
 } satisfies Config;

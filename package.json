@@ -8,11 +8,11 @@
     "dev:client": "cd nextjs-meetup-scraper; npm run dev",
     "dev:server": "cd hono-meetup-server; npm run dev",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "db:generate": "cd nextjs-meetup-scraper; npx drizzle-kit generate:sqlite",
-    "db:push": "cd nextjs-meetup-scraper; npx drizzle-kit push:sqlite",
-    "db:migrate": "npm run db:generate && npm run db:push",
-    "db:studio": "cd nextjs-meetup-scraper; npx drizzle-kit studio",
-    "db:backup": "tsx scripts/db-backup.ts"
+    "sqlite:generate": "cd nextjs-meetup-scraper; npx drizzle-kit generate:sqlite",
+    "sqlite:push": "cd nextjs-meetup-scraper; npx drizzle-kit push:sqlite",
+    "sqlite:migrate": "npm run sqlite:generate && npm run sqlite:push",
+    "sqlite:studio": "cd nextjs-meetup-scraper; npx drizzle-kit studio",
+    "sqlite:backup": "tsx scripts/db-backup.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,6 @@
     "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.12.3",
     "concurrently": "^8.2.2",
-    "drizzle-kit": "^0.20.18",
     "tsx": "^4.7.1"
   }
 }

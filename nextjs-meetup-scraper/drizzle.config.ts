@@ -11,7 +11,7 @@ if (!dbFile) {
 
 export default {
   schema: "./src/db/schema.ts",
-  out: "./drizzle",
+  out: "./drizzle/sqlite",
   driver: "better-sqlite",
   dbCredentials: {
     url: dbFile,
