@@ -1,6 +1,6 @@
 import type { Config } from "drizzle-kit";
-import path from "path";
-import dotenv from "dotenv";
+import * as path from "node:path";
+import * as dotenv from "dotenv";
 dotenv.config({ path: path.join(__dirname, ".env.local") });
 
 const connectionString = process.env.POSTGRES_URL;

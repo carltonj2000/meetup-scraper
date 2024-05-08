@@ -42,7 +42,7 @@ export const hikesT = pgTable(
   {
     id: serial("id").primaryKey().notNull(),
     name: text("name").notNull(),
-    baseHikeId: serial("base_hike_id").references(() => baseHikesT.id),
+    baseHikeId: integer("base_hike_id").references(() => baseHikesT.id),
     date: text("date"),
   },
   (t) => ({ unq: unique("hike_per_date").on(t.name, t.date) })
@@ -54,14 +54,14 @@ export type HikeT = typeof hikesT.$inferSelect;
 export const baseHikesT = pgTable("base_hikes", {
   id: serial("id").primaryKey().notNull(),
   name: text("name").notNull(),
-  level: integer("level").references(() => baseHikesLevelsT.id),
+  level: integer("level").references(() => baseHikesLevelsT.level),
 });
 
 export type NewBaseHikeT = typeof baseHikesT.$inferInsert;
 export type BaseHikeT = typeof baseHikesT.$inferSelect;
 
 export const baseHikesLevelsT = pgTable("base_hikes_levels", {
-  id: integer("level").primaryKey().notNull(),
+  level: integer("level").primaryKey().notNull(),
   name: text("name").notNull(),
   color: text("color").notNull(),
 });

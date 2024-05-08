@@ -7,6 +7,7 @@ import { Style } from "hono/css";
 import * as styles from "./styles";
 import { app as sqliteRoutes, SqliteLinks } from "./sqlite-routes";
 import { app as vercelPgRoutes, VercelPgLinks } from "./vercel-pg-routes";
+import { app as mergeRoutes, MergeLinks } from "./merge-routes";
 
 const app = new Hono();
 app.use(logger());
@@ -37,7 +38,10 @@ const Layout: FC = (props) => {
         <div class={styles.sideBySideCss}>
           <div class={styles.navCss}>
             <SqliteLinks baseRoute="/sqlite" />
+            <hr style={{ width: "100%" }} />
             <VercelPgLinks baseRoute="/vercelPg" />
+            <hr style={{ width: "100%" }} />
+            <MergeLinks baseRoute="/merge" />
           </div>
           <div>{props.children}</div>
         </div>
@@ -67,5 +71,6 @@ app.get("/", (c) => {
 
 app.route("/sqlite", sqliteRoutes);
 app.route("/vercelPg", vercelPgRoutes);
+app.route("/merge", mergeRoutes);
 
 export default { port: 4444, fetch: app.fetch };

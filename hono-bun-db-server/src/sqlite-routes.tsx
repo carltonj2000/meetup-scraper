@@ -40,6 +40,6 @@ app.get("/getBaseHikes", async (c) => {
 });
 
 app.get("/getBaseHikeLevels", async (c) => {
-  const baseHikes = await sqlite.getBaseHikeLevels();
+  const baseHikes = await sqlite.getBaseHikesLevels();
   return c.html(<ShowJson title="sqlite getBaseHikeLevels" json={baseHikes} />);
 });

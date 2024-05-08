@@ -15,9 +15,9 @@ bun i @vercel/postgres
 ## SQL Commands
 
 ```sql
-drop table user_hikes;
-drop table base_hikes;
-drop table base_level_hikes;
-drop table hikes;
+drop table users_hikes;
 drop table users;
+drop table hikes;
+drop table base_hikes;
+drop table base_hikes_levels;
 ```
